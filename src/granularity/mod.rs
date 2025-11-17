@@ -6,7 +6,7 @@ mod possible_dimensions;
 
 /// Holds meta-data that allows the actual data
 /// array to be interpreted.
-pub struct MetaData {
+pub struct Granularity {
     /// The dimensions that the data actually "varies by".
     flags: Flags,
 
@@ -14,7 +14,7 @@ pub struct MetaData {
     dims: PossibleDimensions,
 }
 
-impl MetaData {
+impl Granularity {
     pub fn new(dimension_name: String, dimension_values: Vec<String>) -> Self {
         Self {
             flags: Default::default(),
