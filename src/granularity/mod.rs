@@ -36,4 +36,17 @@ impl Granularity {
         let idx = self.dims.index_of(dimension_name);
         self.flags.run_length(idx)
     }
+
+    pub fn broadcast(&self, other: &Self) -> Self {
+        if self.dims == other.dims {
+            let flags = self.flags.broadcast(&other.flags, &self.dims.sizes());
+            Self {
+                flags,
+                dims: self.dims.clone()
+            }
+        } else {
+            todo!()
+        }
+    }
+    
 }

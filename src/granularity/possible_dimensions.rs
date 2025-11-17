@@ -29,6 +29,10 @@ impl PossibleDimensions {
         self.0.insert(name, DimensionValues(values));
         self
     }
+
+    pub fn sizes(&self) -> Vec<usize> {
+        self.0.values().map(|v| v.0.len()).collect()
+    }
 }
 
 /// Combines two instances of `PossibleDimensions` creating a new `PossibleDimenions` that
