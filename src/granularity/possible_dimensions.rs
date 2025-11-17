@@ -13,7 +13,7 @@ use indexmap::IndexMap;
 pub struct DimensionValues(Vec<String>);
 
 /// The collection of all possible dimensions that a value **could** vary by.
-#[derive(Default, Eq, PartialEq, Debug)]
+#[derive(Default, Eq, PartialEq, Debug, Clone)]
 pub struct PossibleDimensions(IndexMap<String, DimensionValues>);
 
 impl PossibleDimensions {

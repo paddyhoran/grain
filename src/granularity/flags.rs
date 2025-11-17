@@ -5,6 +5,7 @@ use bitvec::vec::BitVec;
 ///
 /// The available dimensions themselves are tracked by
 /// `PossibleDimensions`.
+#[derive(PartialEq, Eq, Clone)]
 pub struct Flags {
     /// Indicates the dimensions that are in use.
     flags: BitVec,

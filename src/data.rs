@@ -2,24 +2,33 @@ use crate::granularity::Granularity;
 
 use arrow_array::{PrimitiveArray, types::Float64Type};
 
+pub(crate) type Values = PrimitiveArray<Float64Type>;
+
 /// This is the main type used to model data of varying
 /// granularity.
 pub struct Data {
     /// Holds the meta-data so we know how to interpret the
     /// `values`.
-    metadata: Granularity,
+    pub(crate) granularity: Granularity,
 
     /// Holds the actual values.
-    values: PrimitiveArray<Float64Type>,
+    pub(crate) values: Values,
 }
 
 impl Data {
+    pub(crate) fn new_from_parts() -> Self {
+        todo!()
+    }
+
     /// Creates a new piece of data that contains a single dimension.
     pub fn new(dimension_name: String, dimension_values: Vec<String>, values: Vec<f64>) -> Self {
         let metadata = Granularity::new(dimension_name, dimension_values);
         let values = PrimitiveArray::<Float64Type>::from(values);
 
-        Self { metadata, values }
+        Self {
+            granularity: metadata,
+            values,
+        }
     }
 
     /// Creates a new piece of data that contains a single dimension from an iterator.
@@ -30,6 +39,14 @@ impl Data {
         let (dimension_values, values) = iter.unzip();
         Self::new(dimension_name, dimension_values, values)
     }
+
+    pub(crate) fn granularity(&self) -> &Granularity {
+        &self.granularity
+    }
+
+    pub(crate) fn values(&self) -> &Values {
+        &self.values
+    }
 }
 
 #[cfg(test)]
@@ -39,9 +56,9 @@ mod tests {
     #[test]
     fn test_single_element() {
         let data = Data::new_from_iter("test".to_string(), [("A".to_string(), 1.0)].into_iter());
-        assert_eq!(data.metadata.size(), 1);
-        assert!(data.metadata.varies_by("test"));
-        assert_eq!(data.metadata.run_length("test"), &0);
+        assert_eq!(data.granularity.size(), 1);
+        assert!(data.granularity.varies_by("test"));
+        assert_eq!(data.granularity.run_length("test"), &0);
     }
 
     #[test]
@@ -50,8 +67,8 @@ mod tests {
             "test".to_string(),
             [("A".to_string(), 1.0), ("B".to_string(), 2.0)].into_iter(),
         );
-        assert_eq!(data.metadata.size(), 1);
-        assert!(data.metadata.varies_by("test"));
-        assert_eq!(data.metadata.run_length("test"), &0);
+        assert_eq!(data.granularity.size(), 1);
+        assert!(data.granularity.varies_by("test"));
+        assert_eq!(data.granularity.run_length("test"), &0);
     }
 }

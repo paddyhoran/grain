@@ -6,6 +6,7 @@ mod possible_dimensions;
 
 /// Holds meta-data that allows the actual data
 /// array to be interpreted.
+#[derive(PartialEq, Eq, Clone)]
 pub struct Granularity {
     /// The dimensions that the data actually "varies by".
     flags: Flags,
