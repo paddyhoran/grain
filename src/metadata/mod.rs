@@ -21,4 +21,18 @@ impl MetaData {
             dims: PossibleDimensions::default().add_dimension(dimension_name, dimension_values),
         }
     }
+
+    pub fn size(&self) -> usize {
+        self.flags.size()
+    }
+
+    pub fn varies_by(&self, dimension_name: &str) -> bool {
+        let idx = self.dims.index_of(dimension_name);
+        self.flags.varies_by(idx)
+    }
+
+    pub fn run_length(&self, dimension_name: &str) -> &usize {
+        let idx = self.dims.index_of(dimension_name);
+        self.flags.run_length(idx)
+    }
 }

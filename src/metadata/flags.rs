@@ -6,7 +6,6 @@ use bitvec::vec::BitVec;
 /// The available dimensions themselves are tracked by
 /// `PossibleDimensions`.
 pub struct Flags {
-
     /// Indicates the dimensions that are in use.
     flags: BitVec,
 
@@ -14,11 +13,29 @@ pub struct Flags {
     run_lengths: Vec<usize>,
 }
 
+impl Flags {
+    /// Indicates the number of dimensions.
+    pub fn size(&self) -> usize {
+        self.run_lengths.len()
+    }
+
+    pub fn varies_by(&self, idx: usize) -> bool {
+        self.flags[idx]
+    }
+
+    pub fn run_length(&self, idx: usize) -> &usize {
+        &self.run_lengths[idx]
+    }
+}
+
 impl Default for Flags {
     fn default() -> Self {
         let mut flags = BitVec::with_capacity(1);
         flags.push(true);
-        Self { flags, run_lengths: vec![0] }
+        Self {
+            flags,
+            run_lengths: vec![0],
+        }
     }
 }
 

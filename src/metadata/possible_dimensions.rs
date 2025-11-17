@@ -8,7 +8,6 @@
 //! allow zero copy slicing larger regions of data.
 use indexmap::IndexMap;
 
-
 /// Holds the actual values that are possible within a dimension.
 #[derive(Eq, PartialEq, Clone, Default, Debug)]
 pub struct DimensionValues(Vec<String>);
@@ -18,6 +17,14 @@ pub struct DimensionValues(Vec<String>);
 pub struct PossibleDimensions(IndexMap<String, DimensionValues>);
 
 impl PossibleDimensions {
+    /// Returns the index of the dimension with name `dimension_name`.
+    pub fn index_of(&self, dimension_name: &str) -> usize {
+        self.0
+            .get_index_of(dimension_name)
+            .unwrap_or_else(|| panic!("Un-recognised dimension: '{}'", dimension_name))
+    }
+
+    /// Builder type API for adding new dimensions.
     pub fn add_dimension(mut self, name: String, values: Vec<String>) -> Self {
         self.0.insert(name, DimensionValues(values));
         self
@@ -26,7 +33,10 @@ impl PossibleDimensions {
 
 /// Combines two instances of `PossibleDimensions` creating a new `PossibleDimenions` that
 /// contains all the dimensions of `lhs` and `lhs`.
-pub(crate) fn combine_dimensions(lhs: &PossibleDimensions, rhs: &PossibleDimensions) -> PossibleDimensions {
+pub(crate) fn combine_dimensions(
+    lhs: &PossibleDimensions,
+    rhs: &PossibleDimensions,
+) -> PossibleDimensions {
     let mut new_possible_dimensions = IndexMap::new();
 
     let mut lhs_iter = lhs.0.iter();
@@ -166,8 +176,10 @@ mod tests {
     fn test_sort_by_cardinality() {
         let a = PossibleDimensions::default()
             .add_dimension("2".to_string(), vec!["c".to_string(), "d".to_string()])
-            .add_dimension("1".to_string(), vec!["a".to_string(), "b".to_string(), "c".to_string()])
-        ;
+            .add_dimension(
+                "1".to_string(),
+                vec!["a".to_string(), "b".to_string(), "c".to_string()],
+            );
         let b = PossibleDimensions::default()
             .add_dimension("3".to_string(), vec!["e".to_string(), "f".to_string()]);
 

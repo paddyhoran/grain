@@ -31,3 +31,27 @@ impl Data {
         Self::new(dimension_name, dimension_values, values)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_single_element() {
+        let data = Data::new_from_iter("test".to_string(), [("A".to_string(), 1.0)].into_iter());
+        assert_eq!(data.metadata.size(), 1);
+        assert!(data.metadata.varies_by("test"));
+        assert_eq!(data.metadata.run_length("test"), &0);
+    }
+
+    #[test]
+    fn test_simple_single_dimension() {
+        let data = Data::new_from_iter(
+            "test".to_string(),
+            [("A".to_string(), 1.0), ("B".to_string(), 2.0)].into_iter(),
+        );
+        assert_eq!(data.metadata.size(), 1);
+        assert!(data.metadata.varies_by("test"));
+        assert_eq!(data.metadata.run_length("test"), &0);
+    }
+}
