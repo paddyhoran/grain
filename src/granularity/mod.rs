@@ -62,6 +62,11 @@ impl Granularity {
         }
     }
 
+    pub fn drop(&mut self, dimension_name: &str) {
+        let idx = self.dims.index_of(dimension_name);
+        self.flags.drop(idx);
+    }
+
     /// Calculates the offsets into each dimensions possible values required
     /// by `query`.
     ///

@@ -32,6 +32,11 @@ impl Flags {
         &self.run_lengths[idx]
     }
 
+    pub fn drop(&mut self, idx: usize) {
+        self.flags.set(idx, false);
+        self.run_lengths[idx] = 0;
+    }
+
     pub fn broadcast(&self, other: &Self, sizes: &[usize]) -> Self {
         let flags = self.flags.clone() | other.flags.clone();
         let run_lengths = compute_run_lengths(&flags, sizes);

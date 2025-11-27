@@ -21,7 +21,9 @@ mod tests {
             dimension_value: "B".to_string(),
         };
 
-        let value = data.query(&query);
-        assert_eq!(value, 2.0);
+        let data = data.query(&query);
+        let values = data.values;
+        assert_eq!(values.len(), 1);
+        assert_eq!(values.value(0), 2.0);
     }
 }

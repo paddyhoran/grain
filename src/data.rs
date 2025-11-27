@@ -44,10 +44,16 @@ impl Data {
         &self.values
     }
 
-    pub fn query(&self, query: &Query) -> f64 {
+    pub fn query(&self, query: &Query) -> Self {
         assert_eq!(self.granularity.size(), 1);
         let data_offset = self.granularity.data_offset(query);
-        self.values.value(data_offset)
+        let values = self.values.slice(data_offset, 1);
+        let mut granularity = self.granularity.clone();
+        granularity.drop(&query.dimension_name);
+        Self {
+            granularity,
+            values,
+        }
     }
 }
 
