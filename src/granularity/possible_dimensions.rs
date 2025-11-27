@@ -94,22 +94,20 @@ pub(crate) fn combine_dimensions(
                     } else {
                         panic!("Dimension '{}' has conflicting values.", l_name)
                     }
-                } else {
-                    if l_values.0.len() == r_values.0.len() {
-                        if l_name <= r_name {
-                            new_possible_dimensions.insert(l_name.clone(), l_values.clone());
-                            l = None;
-                        } else {
-                            new_possible_dimensions.insert(r_name.clone(), r_values.clone());
-                            r = None;
-                        }
-                    } else if l_values.0.len() < r_values.0.len() {
+                } else if l_values.0.len() == r_values.0.len() {
+                    if l_name <= r_name {
                         new_possible_dimensions.insert(l_name.clone(), l_values.clone());
                         l = None;
                     } else {
                         new_possible_dimensions.insert(r_name.clone(), r_values.clone());
                         r = None;
                     }
+                } else if l_values.0.len() < r_values.0.len() {
+                    new_possible_dimensions.insert(l_name.clone(), l_values.clone());
+                    l = None;
+                } else {
+                    new_possible_dimensions.insert(r_name.clone(), r_values.clone());
+                    r = None;
                 }
             }
         }
