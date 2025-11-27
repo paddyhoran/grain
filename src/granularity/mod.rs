@@ -62,7 +62,11 @@ impl Granularity {
         }
     }
 
-    pub fn dimension_offsets(&self, query: &Query) -> Vec<Option<usize>> {
+    /// Calculates the offsets into each dimensions possible values required
+    /// by `query`.
+    ///
+    /// A `None` value indicates that the dimension is not needed for `query`.
+    fn dimension_offsets(&self, query: &Query) -> Vec<Option<usize>> {
         let mut values: Vec<_> = (0..self.size()).map(|_| None).collect();
         let dimension_index = self.dimension_index(&query.dimension_name);
 
@@ -75,6 +79,8 @@ impl Granularity {
         values
     }
 
+    /// Calculates the offset into the `values` array needed to access
+    /// the result of `query`.
     pub fn data_offset(&self, query: &Query) -> usize {
         let dimension_offsets = self.dimension_offsets(query);
         self.flags
