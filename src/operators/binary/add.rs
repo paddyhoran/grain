@@ -41,3 +41,20 @@ pub fn add_scalar(data: &Data, amount: f64) -> Data {
         values,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_strict() {
+
+        let data_1 = Data::new_from_iter("test".to_string(), [("A".to_string(), 1.0)].into_iter());
+        let data_2 = Data::new_from_iter("test".to_string(), [("A".to_string(), 4.0)].into_iter());
+
+        let data_3 = add_strict(&data_1, &data_2);
+
+
+        
+    }
+}

@@ -1,4 +1,4 @@
-use crate::granularity::Granularity;
+use crate::{granularity::Granularity, query::Query};
 
 use arrow_array::{PrimitiveArray, types::Float64Type};
 
@@ -16,17 +16,13 @@ pub struct Data {
 }
 
 impl Data {
-    pub(crate) fn new_from_parts() -> Self {
-        todo!()
-    }
-
     /// Creates a new piece of data that contains a single dimension.
     pub fn new(dimension_name: String, dimension_values: Vec<String>, values: Vec<f64>) -> Self {
-        let metadata = Granularity::new(dimension_name, dimension_values);
+        let granularity = Granularity::new(dimension_name, dimension_values);
         let values = PrimitiveArray::<Float64Type>::from(values);
 
         Self {
-            granularity: metadata,
+            granularity,
             values,
         }
     }
@@ -40,12 +36,18 @@ impl Data {
         Self::new(dimension_name, dimension_values, values)
     }
 
-    pub(crate) fn granularity(&self) -> &Granularity {
+    pub fn granularity(&self) -> &Granularity {
         &self.granularity
     }
 
-    pub(crate) fn values(&self) -> &Values {
+    pub fn values(&self) -> &Values {
         &self.values
+    }
+
+    pub fn query(&self, query: &Query) -> f64 {
+        assert_eq!(self.granularity.size(), 1);
+        let data_offset = self.granularity.data_offset(query);
+        self.values.value(data_offset)
     }
 }
 
@@ -58,7 +60,7 @@ mod tests {
         let data = Data::new_from_iter("test".to_string(), [("A".to_string(), 1.0)].into_iter());
         assert_eq!(data.granularity.size(), 1);
         assert!(data.granularity.varies_by("test"));
-        assert_eq!(data.granularity.run_length("test"), &0);
+        assert_eq!(data.granularity.run_length("test"), &1);
     }
 
     #[test]
@@ -69,6 +71,6 @@ mod tests {
         );
         assert_eq!(data.granularity.size(), 1);
         assert!(data.granularity.varies_by("test"));
-        assert_eq!(data.granularity.run_length("test"), &0);
+        assert_eq!(data.granularity.run_length("test"), &1);
     }
 }

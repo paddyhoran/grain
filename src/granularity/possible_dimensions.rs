@@ -6,6 +6,7 @@
 //! How dimensions are ordered is encoded in this type.  Currently,
 //! higher cardinality dimensions are push toward the right which should
 //! allow zero copy slicing larger regions of data.
+
 use indexmap::IndexMap;
 
 /// Holds the actual values that are possible within a dimension.
@@ -24,6 +25,16 @@ impl PossibleDimensions {
             .unwrap_or_else(|| panic!("Un-recognised dimension: '{}'", dimension_name))
     }
 
+    pub fn index_of_value(&self, dim_index: usize, value: &String) -> usize {
+        let values = &self.0[dim_index];
+        values.0.iter().position(|s| s == value).unwrap()
+    }
+
+    /// Returns the index of the dimension with name `dimension_name`.
+    pub fn maybe_index_of(&self, dimension_name: &str) -> Option<usize> {
+        self.0.get_index_of(dimension_name)
+    }
+
     /// Builder type API for adding new dimensions.
     pub fn add_dimension(mut self, name: String, values: Vec<String>) -> Self {
         self.0.insert(name, DimensionValues(values));
@@ -37,6 +48,7 @@ impl PossibleDimensions {
 
 /// Combines two instances of `PossibleDimensions` creating a new `PossibleDimenions` that
 /// contains all the dimensions of `lhs` and `lhs`.
+#[allow(dead_code)]
 pub(crate) fn combine_dimensions(
     lhs: &PossibleDimensions,
     rhs: &PossibleDimensions,

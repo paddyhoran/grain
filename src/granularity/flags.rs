@@ -24,6 +24,10 @@ impl Flags {
         self.flags[idx]
     }
 
+    pub fn run_lengths(&self) -> &Vec<usize> {
+        &self.run_lengths
+    }
+
     pub fn run_length(&self, idx: usize) -> &usize {
         &self.run_lengths[idx]
     }
@@ -41,7 +45,7 @@ impl Default for Flags {
         flags.push(true);
         Self {
             flags,
-            run_lengths: vec![0],
+            run_lengths: vec![1],
         }
     }
 }
