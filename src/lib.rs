@@ -1,6 +1,6 @@
 mod data;
 mod granularity;
-// mod operators;
+mod operators;
 mod query;
 
 pub use data::*;
