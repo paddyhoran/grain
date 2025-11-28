@@ -46,7 +46,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_add_scalar() {
+    fn test_mul_strict() {
+        let data_1 = Data::new_from_iter("test".to_string(), [("A".to_string(), 3.0)].into_iter());
+        let data_2 = Data::new_from_iter("test".to_string(), [("A".to_string(), 5.0)].into_iter());
+        let data_3 = mul_strict(&data_1, &data_2);
+
+        let values = data_3.values();
+        assert_eq!(values.len(), 1);
+        let value = values.value(0);
+        assert_eq!(value, 15.0);
+    }
+
+    #[test]
+    fn test_mul_scalar() {
         let data_1 = Data::new_from_iter("test".to_string(), [("A".to_string(), 1.0)].into_iter());
         let data_2 = mul_scalar(&data_1, 3.0);
 
